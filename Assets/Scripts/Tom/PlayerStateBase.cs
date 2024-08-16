@@ -1,5 +1,7 @@
 
-public class PlayerStateBase
+using UnityEngine;
+
+public class PlayerStateBase 
 {
     public virtual  void OnEnter(PlayerStateManager owner, PlayerStateBase prevState) { }
     public virtual  void OnUpdata(PlayerStateManager owner) { }

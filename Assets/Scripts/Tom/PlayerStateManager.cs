@@ -6,6 +6,7 @@ public partial class PlayerStateManager : MonoBehaviour
 {
     private PlayerStateBase moveState = new PlayerMoveState();
     private PlayerStateBase reflectionState = new PlayerReflectionState();
+    public Collision reflectWall;
     public PlayerStateBase currentState { get; private set; }
     // Start is called before the first frame update
     void Start()
@@ -26,5 +27,10 @@ public partial class PlayerStateManager : MonoBehaviour
         currentState.OnExit(this, nextState);
         nextState.OnEnter(this, currentState);
         currentState = nextState;
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        reflectWall = collision;
     }
 }
