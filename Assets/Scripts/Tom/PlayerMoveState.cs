@@ -51,7 +51,7 @@ public partial class PlayerStateManager
         }
 
         public override void OnExit(PlayerStateManager owner, PlayerStateBase prevState) {
-            owner.reflectWall = null;
+                        //owner.reflectWall = null;
         
         }
     }

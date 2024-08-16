@@ -22,6 +22,10 @@ public partial class PlayerStateManager
 
             vec = (worldMousePos - owner.transform.position).normalized;
 
+            float angle =  Vector3.Angle(vec, owner.reflectWall.contacts[0].normal);
+            if(angle > 90) {
+                owner.reflectWall = null;
+            }
         }
 
         public override void OnUpdata(PlayerStateManager owner)
@@ -32,19 +36,50 @@ public partial class PlayerStateManager
             //print(worldMousePos);
 
             //owner.transform.position = new Vector3(owner.transform.position.x + 0.01f, owner.transform.position.y, 0);
-            owner.GetComponent<Rigidbody>().velocity =vec * owner.reflectSpeed;
+            owner.GetComponent<Rigidbody>().velocity =vec.normalized * owner.reflectSpeed;
+            print("vex" + owner.GetComponent<Rigidbody>().velocity);
             if (owner.reflectWall != null)
-            {
-                boundCount--;
-                vec = Vector3.Reflect(owner.GetComponent<Rigidbody>().velocity.normalized, owner.reflectWall.contacts[0].normal);
-                owner.reflectWall = null;
+            {               
                
+               if(boundCount > 0)
+                {
+                    if(owner.reflectWall == null)
+                    {
+                        //return;
+                    }
+                    ContactPoint[] contact = new ContactPoint[1];
+                    print("contacts" + owner.reflectWall.GetContacts(contact));
+                    vec = Vector3.Reflect(owner.GetComponent<Rigidbody>().velocity.normalized, contact[0].normal);
+                    owner.reflectWall = null;
+                }
+                else
+                {
+                    boundCount = 0;
+                    owner.ChangeState(owner.moveState);
+                }
+                boundCount--;
+
+
+
+
             }
-            if ( boundCount < 0)
-            {
-                boundCount = 0;
-                owner.ChangeState(owner.moveState);
-            }
+
+
+            /*            if(boundCount != 0)
+                        {
+                            if (owner.reflectWall != null)
+                            {
+                                vec = Vector3.Reflect(owner.GetComponent<Rigidbody>().velocity.normalized, owner.reflectWall.contacts[0].normal);
+                                owner.reflectWall = null;
+                                boundCount--;
+                            }
+                        }
+                        else
+                        {
+                            boundCount = 0;
+                            owner.ChangeState(owner.moveState);
+                        }*/
+
         }
 
         public override void OnExit(PlayerStateManager owner, PlayerStateBase prevState)
