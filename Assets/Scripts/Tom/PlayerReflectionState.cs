@@ -40,7 +40,7 @@ public partial class PlayerStateManager
                 owner.reflectWall = null;
                
             }
-            if(boundCount == -1)
+            if ( boundCount < 0)
             {
                 boundCount = 0;
                 owner.ChangeState(owner.moveState);

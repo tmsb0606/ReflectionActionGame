@@ -28,7 +28,7 @@ public partial class PlayerStateManager
                 if(mouseDownTime > limitTime)
                 {
                     boundCount++;
-                    if(boundCount >= boundCountLimit)
+                    if(boundCount > boundCountLimit)
                     {
                         boundCount = 0;
                     }
@@ -38,8 +38,14 @@ public partial class PlayerStateManager
             }
             if (Input.GetMouseButtonUp(0))
             {
+                mouseDownTime = 0;
                 //これでステート変更
-                owner.ChangeState(owner.reflectionState);
+
+                if (boundCount > 0)
+                {
+                    owner.ChangeState(owner.reflectionState);
+                }
+                
             }
             
         }
