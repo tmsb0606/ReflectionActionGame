@@ -8,12 +8,15 @@ public partial class PlayerStateManager : MonoBehaviour
     private PlayerStateBase reflectionState = new PlayerReflectionState();
     public Collision reflectWall;
     public float reflectSpeed = 2.0f;
+
+    public Rigidbody rb;
     public PlayerStateBase currentState { get; private set; }
     // Start is called before the first frame update
     void Start()
     {
         currentState = moveState;
         currentState.OnEnter(this,null);
+        rb = GetComponent<Rigidbody>();
         //ChangeState(reflectionState);
     }
 

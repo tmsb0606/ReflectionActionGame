@@ -22,7 +22,9 @@ public partial class PlayerStateManager
 
             vec = (worldMousePos - owner.transform.position).normalized;
 
-            float angle =  Vector3.Angle(vec, owner.reflectWall.contacts[0].normal);
+            ContactPoint[] contact = new ContactPoint[1];
+            owner.reflectWall.GetContacts(contact);
+            float angle =  Vector3.Angle(vec, contact[0].normal);
             if(angle > 90) {
                 owner.reflectWall = null;
             }
@@ -48,7 +50,7 @@ public partial class PlayerStateManager
                         //return;
                     }
                     ContactPoint[] contact = new ContactPoint[1];
-                    print("contacts" + owner.reflectWall.GetContacts(contact));
+                    owner.reflectWall.GetContacts(contact);
                     vec = Vector3.Reflect(owner.GetComponent<Rigidbody>().velocity.normalized, contact[0].normal);
                     owner.reflectWall = null;
                 }
