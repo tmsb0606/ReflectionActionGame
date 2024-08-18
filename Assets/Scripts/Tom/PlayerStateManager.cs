@@ -6,8 +6,8 @@ public partial class PlayerStateManager : MonoBehaviour
 {
     private PlayerStateBase moveState = new PlayerMoveState();
     private PlayerStateBase reflectionState = new PlayerReflectionState();
-    public Collision reflectWall;
-    public float reflectSpeed = 2.0f;
+    public List<Collision> reflectWall = new List<Collision>();
+    public float reflectSpeed = 10.0f;
 
     public Rigidbody rb;
     public PlayerStateBase currentState { get; private set; }
@@ -18,12 +18,14 @@ public partial class PlayerStateManager : MonoBehaviour
         currentState.OnEnter(this,null);
         rb = GetComponent<Rigidbody>();
         //ChangeState(reflectionState);
+        
     }
 
     // Update is called once per frame
     void Update()
     {
         currentState.OnUpdata(this);
+        print("”½ŽË–Ê"+reflectWall.Count);
     }
 
     private void ChangeState(PlayerStateBase nextState)
@@ -35,6 +37,10 @@ public partial class PlayerStateManager : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        reflectWall = collision;
+        reflectWall.Add(collision); ;
+    }
+    private void OnCollisionExit(Collision collision)
+    {
+        reflectWall.Remove(collision);
     }
 }

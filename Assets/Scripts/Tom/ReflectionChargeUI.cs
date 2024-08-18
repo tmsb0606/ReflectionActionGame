@@ -19,7 +19,7 @@ public class ReflectionChargeUI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        print(playerStateManager.currentState.boundCount);
+        //print(playerStateManager.currentState.boundCount);
         chargeImage.fillAmount = (float)playerStateManager.currentState.boundCount / 5;
         boundCountText.text = playerStateManager.currentState.boundCount.ToString();
         if (playerStateManager.currentState.boundCount == 0)

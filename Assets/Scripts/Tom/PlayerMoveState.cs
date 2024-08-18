@@ -72,12 +72,7 @@ public partial class PlayerStateManager
 
 
 
-            //カメラの位置をキューブに合わせる
-            Vector3 vecCameraPos = owner.transform.position;
-            vecCameraPos.y += 1.0f;
-            vecCameraPos.z -= 10.0f;
-            GameObject camera = GameObject.Find("Main Camera");
-            camera.transform.position = vecCameraPos;
+
 
 
 

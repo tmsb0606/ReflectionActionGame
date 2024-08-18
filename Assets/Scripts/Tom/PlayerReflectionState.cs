@@ -22,12 +22,29 @@ public partial class PlayerStateManager
 
             vec = (worldMousePos - owner.transform.position).normalized;
 
-            ContactPoint[] contact = new ContactPoint[1];
-            owner.reflectWall.GetContacts(contact);
-            float angle =  Vector3.Angle(vec, contact[0].normal);
-            if(angle > 90) {
-                owner.reflectWall = null;
+            print("vec"+vec);
+
+            for (int i=0;i<owner.reflectWall.Count;i++)
+            {
+                ContactPoint[] contact = new ContactPoint[1];
+                owner.reflectWall[i].GetContacts(contact);
+               // vec = Vector3.Reflect(owner.GetComponent<Rigidbody>().velocity.normalized, contact[0].normal);
+
+
+                float angle = Vector3.Angle(vec, contact[0].normal);
+                if (angle > 90)
+                {
+                    //owner.reflectWall.Clear();
+                    owner.reflectWall.RemoveAt(i);
+                }
+                
+                //owner.reflectWall = null;
             }
+           // owner.reflectWall.Clear();
+
+            //ContactPoint[] contact = new ContactPoint[1];
+            //owner.reflectWall[0].GetContacts(contact);
+
         }
 
         public override void OnUpdata(PlayerStateManager owner)
@@ -40,31 +57,39 @@ public partial class PlayerStateManager
             //owner.transform.position = new Vector3(owner.transform.position.x + 0.01f, owner.transform.position.y, 0);
             owner.GetComponent<Rigidbody>().velocity =vec.normalized * owner.reflectSpeed;
             print("vex" + owner.GetComponent<Rigidbody>().velocity);
-            if (owner.reflectWall != null)
-            {               
-               
-               if(boundCount > 0)
+
+
+            if (boundCount > 0)
+            {
+                for (int i = 0; i < owner.reflectWall.Count; i++)
                 {
-                    if(owner.reflectWall == null)
-                    {
-                        //return;
-                    }
+                    print("test");
                     ContactPoint[] contact = new ContactPoint[1];
-                    owner.reflectWall.GetContacts(contact);
+                    owner.reflectWall[i].GetContacts(contact);
                     vec = Vector3.Reflect(owner.GetComponent<Rigidbody>().velocity.normalized, contact[0].normal);
-                    owner.reflectWall = null;
+                    //owner.reflectWall = null;
+                    owner.reflectWall.Remove(owner.reflectWall[i]);
+                    boundCount--;
+                    if(boundCount == 0)
+                    {
+                        break;
+                    }
                 }
-                else
-                {
-                    boundCount = 0;
-                    owner.ChangeState(owner.moveState);
-                }
-                boundCount--;
-
-
+                //owner.reflectWall.Clear();
 
 
             }
+            else
+            {
+                boundCount = 0;
+                owner.ChangeState(owner.moveState);
+            }
+                
+
+
+
+
+            
 
 
             /*            if(boundCount != 0)

@@ -4,15 +4,13 @@ using UnityEngine;
 
 public class NeedleScript : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
-    // Update is called once per frame
-    void Update()
+    private void OnCollisionEnter(Collision collision)
     {
-        
+        if (collision.gameObject.tag == "Player")
+        {
+            print("Ž€‚ñ‚¾");
+            collision.gameObject.SetActive(false);
+        }
     }
 }
