@@ -5,6 +5,10 @@ using UnityEngine;
 public class GoalScript : MonoBehaviour
 {
     // Start is called before the first frame update
+
+    public GameObject resultCanvas;
+
+    public GameManager gm;
     void Start()
     {
         
@@ -21,6 +25,8 @@ public class GoalScript : MonoBehaviour
         if (collision.gameObject.tag == "Player")
         {
             print("goal");
+            resultCanvas.SetActive(true);
+            gm.isStop = true;
         }
     }
 }
