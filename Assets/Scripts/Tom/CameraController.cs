@@ -6,6 +6,7 @@ using static UnityEngine.UI.GridLayoutGroup;
 public class CameraController : MonoBehaviour
 {
     [SerializeField] private GameObject _targetObj;
+    [SerializeField] private Vector3 offsetPos;
     // Start is called before the first frame update
     void Start()
     {
@@ -19,6 +20,6 @@ public class CameraController : MonoBehaviour
         Vector3 vecCameraPos = _targetObj.transform.position;
         vecCameraPos.y += 1.0f;
         vecCameraPos.z -= 10.0f;
-        transform.position = vecCameraPos;
+        transform.position = vecCameraPos + offsetPos;
     }
 }

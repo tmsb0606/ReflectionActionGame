@@ -1,12 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
+using static UnityEngine.UI.GridLayoutGroup;
 
 public partial class PlayerStateManager : MonoBehaviour
 {
     private PlayerStateBase moveState = new PlayerMoveState();
     private PlayerStateBase reflectionState = new PlayerReflectionState();
-    public List<Collision> reflectWall = new List<Collision>();
+    public List<GameObject> reflectWallObj = new List<GameObject>();
+    public List<Vector3> reflectWallNormal = new List<Vector3>();
+    public List<ContactPoint> reflectWallContact = new List<ContactPoint>();
     public float reflectSpeed = 10.0f;
 
     public Rigidbody rb;
@@ -25,7 +30,11 @@ public partial class PlayerStateManager : MonoBehaviour
     void Update()
     {
         currentState.OnUpdata(this);
-        print("反射面"+reflectWall.Count);
+        print("反射面"+reflectWallNormal.Count);
+        for(int i=0;i<reflectWallContact.Count;i++)
+        {
+            print("壁"+i +" :"+reflectWallContact[i]);
+        }
     }
 
     private void ChangeState(PlayerStateBase nextState)
@@ -37,10 +46,78 @@ public partial class PlayerStateManager : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        reflectWall.Add(collision); ;
+        // 接触したオブジェクトを取得
+        GameObject collidedObject = collision.gameObject;
+
+        // 既にリストに含まれている場合は処理を中断
+        if (reflectWallObj.Contains(collidedObject))
+        {
+            return;
+        }
+
+        // リストにオブジェクトを追加
+        reflectWallObj.Add(collidedObject);
+
+        // ContactPointの最初の要素のみを処理
+        ContactPoint contact = collision.contacts[0];
+
+        // 接触点の情報をリストに追加
+        reflectWallContact.Add(contact);
+        reflectWallNormal.Add(contact.normal);
     }
+
+    /// <summary>
+    /// 2面接している状態から1面になったときに発射すると壁の法線が0になる問題を解決。
+    /// ※常にこれを動かしていると反射モードで挙動がおかしくなるため反射モードではoff
+    /// </summary>
+    /// <param name="collision"></param>
+    /*private void OnCollisionStay(Collision collision)
+    {
+        print("stay");
+        if(currentState  == reflectionState) {
+            return;
+        }
+        *//*        print(reflectWall.Contains(collision));
+                if(reflectWall.Contains(collision))
+                {
+                    return;
+                }*//*
+
+
+        reflectWallObj.Add(collision.gameObject);
+        ContactPoint[] contact = new ContactPoint[1];
+        collision.GetContacts(contact);
+
+        if (reflectWallContact.Contains(contact[0]))
+        {
+            return;
+        }
+
+        reflectWallContact.Add(contact[0]);
+        reflectWallNormal.Add(contact[0].normal);
+    }*/
     private void OnCollisionExit(Collision collision)
     {
-        reflectWall.Remove(collision);
+        // 接触したオブジェクトをリストから削除
+        reflectWallObj.Remove(collision.gameObject);
+
+        // 接触点の最初の要素を取得
+        ContactPoint[] contacts = new ContactPoint[collision.contactCount];
+        collision.GetContacts(contacts);
+
+        // 最初の接触点のみ処理
+        ContactPoint contact = contacts[0];
+
+        // 接触点がリストに含まれているか確認し、含まれていれば削除
+        for (int i = 0; i < reflectWallContact.Count; i++)
+        {
+            if (reflectWallContact[i].point == contact.point && reflectWallContact[i].normal == contact.normal)
+            {
+                reflectWallContact.RemoveAt(i);
+                reflectWallNormal.RemoveAt(i);
+                break;  // 一致する項目が見つかったらループを抜ける
+            }
+        }
     }
+
 }
