@@ -11,6 +11,7 @@ public partial class PlayerStateManager : MonoBehaviour
     private PlayerStateBase reflectionState = new PlayerReflectionState();
     public List<GameObject> reflectWallObj = new List<GameObject>();
     public List<ContactPoint> reflectWallContact = new List<ContactPoint>();
+    public List<Vector3> reflectWallNormal = new List<Vector3>();
     public float reflectSpeed = 10.0f;
 
     public Rigidbody rb;
@@ -32,7 +33,7 @@ public partial class PlayerStateManager : MonoBehaviour
         //print("反射面"+reflectWallNormal.Count);
         for(int i=0;i<reflectWallContact.Count;i++)
         {
-            print("壁"+i +" :"+reflectWallContact[i]);
+            print("壁"+i +" :"+reflectWallContact[i].normal);
         }
     }
 
@@ -53,16 +54,21 @@ public partial class PlayerStateManager : MonoBehaviour
         {
             return;
         }
-
-        // リストにオブジェクトを追加
-        reflectWallObj.Add(collidedObject);
+        
+        
 
         // ContactPointの最初の要素のみを処理
         ContactPoint contact = collision.contacts[0];
 
+        if (reflectWallNormal.Contains(contact.normal))
+        {
+            return;
+        }
+
         // 接触点の情報をリストに追加
+        reflectWallObj.Add(collidedObject);
         reflectWallContact.Add(contact);
-        //reflectWallNormal.Add(contact.normal);
+        reflectWallNormal.Add(contact.normal);
     }
 
     /// <summary>
@@ -105,6 +111,7 @@ public partial class PlayerStateManager : MonoBehaviour
                 print("一致");
                 reflectWallObj.RemoveAt(i);
                 reflectWallContact.RemoveAt(i);
+                reflectWallNormal.RemoveAt(i);
             }
         }
     }

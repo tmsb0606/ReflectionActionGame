@@ -55,7 +55,7 @@ public partial class PlayerStateManager
                 // vec = Vector3.Reflect(owner.GetComponent<Rigidbody>().velocity.normalized, contact[0].normal);
 
                 print("playervec:" + vec);
-                //print("wallvec :" + contact[0].normal);
+                print("wallvec :" + owner.reflectWallContact[i].normal);
                 float angle = Vector3.Angle(vec, owner.reflectWallContact[i].normal);
                 print("angle" + angle);
                 if (angle < 90)
@@ -63,6 +63,7 @@ public partial class PlayerStateManager
                     //owner.reflectWall.Clear();
                     owner.reflectWallContact.RemoveAt(i);
                     owner.reflectWallObj.RemoveAt(i);
+                    owner.reflectWallNormal.RemoveAt(i);
                     break;
                 }
                 else
@@ -121,6 +122,7 @@ public partial class PlayerStateManager
                     //owner.reflectWall = null;
                     owner.reflectWallContact.RemoveAt(i);
                     owner.reflectWallObj.RemoveAt(i);
+                    owner.reflectWallNormal.RemoveAt(i);
                     boundCount--;
                     if(boundCount == 0)
                     {
