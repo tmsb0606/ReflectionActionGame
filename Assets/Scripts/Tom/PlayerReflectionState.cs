@@ -26,44 +26,50 @@ public partial class PlayerStateManager
 
             print("vec"+vec);
 
-/*            for (int i = 0; i < owner.reflectWallNormal.Count - 1; i++)
+/*            for (int i = 0; i < owner.reflectWallContact.Count - 1; i++)
             {
 
 
-                float angle = Vector3.Angle(vec, owner.reflectWallNormal[0]);
-                float angle2 = Vector3.Angle(vec, owner.reflectWallNormal[1]);
+                float angle = Vector3.Angle(vec, owner.reflectWallContact[0].normal);
+                float angle2 = Vector3.Angle(vec, owner.reflectWallContact[1].normal);
                 print("angle1:" + angle);
                 print("angle2:" + angle2);
 
                 if (angle < angle2)
                 {
-                    Vector3 temp = owner.reflectWallNormal[i];
-                    owner.reflectWallNormal[i] = owner.reflectWallNormal[i + 1];
-                    owner.reflectWallNormal[i + 1] = temp;
+                    ContactPoint temp = owner.reflectWallContact[i];
+                    owner.reflectWallContact[i] = owner.reflectWallContact[i + 1];
+                    owner.reflectWallContact[i + 1] = temp;
+
+                    GameObject temp2 = owner.reflectWallObj[i];
+                    owner.reflectWallObj[i] = owner.reflectWallObj[i+1];
+                    owner.reflectWallObj[i + 1] = temp2;
 
 
                 }
             }*/
 
-            for (int i = 0; i < owner.reflectWallNormal.Count; i++)
+            for (int i = 0; i < owner.reflectWallContact.Count; i++)
             {
 
                 // vec = Vector3.Reflect(owner.GetComponent<Rigidbody>().velocity.normalized, contact[0].normal);
 
                 print("playervec:" + vec);
                 //print("wallvec :" + contact[0].normal);
-                float angle = Vector3.Angle(vec, owner.reflectWallNormal[i]);
+                float angle = Vector3.Angle(vec, owner.reflectWallContact[i].normal);
                 print("angle" + angle);
-                if (angle >= 90)
+                if (angle < 90)
                 {
                     //owner.reflectWall.Clear();
-                    owner.reflectWallNormal.Remove(owner.reflectWallNormal[i]);
+                    owner.reflectWallContact.RemoveAt(i);
+                    owner.reflectWallObj.RemoveAt(i);
+                    break;
                 }
                 else
                 {
 
-                    vec = Vector3.Reflect(vec, owner.reflectWallNormal[i]);
-                    boundCount--;
+                   // vec = Vector3.Reflect(vec, owner.reflectWallContact[i].normal);
+                    //boundCount--;
                 }
 
                 //owner.reflectWall = null;
@@ -80,7 +86,7 @@ public partial class PlayerStateManager
             //反射するプログラムを書く
 
 
-            print("反射する面:" + owner.reflectWallNormal.Count);
+            print("反射する面:" + owner.reflectWallContact.Count);
             //print(worldMousePos);
 
             //owner.transform.position = new Vector3(owner.transform.position.x + 0.01f, owner.transform.position.y, 0);
@@ -91,29 +97,30 @@ public partial class PlayerStateManager
             if (boundCount > 0)
             {
                 //2面以上接しているときにどちらから計算するか入れ替えるべき？
-/*                for (int i = 0; i < owner.reflectWallNormal.Count - 1; i++)
+/*                for (int i = 0; i < owner.reflectWallContact.Count - 1; i++)
                 {
 
 
-                    float angle = Vector3.Angle(vec, owner.reflectWallNormal[i]);
-                    float angle2 = Vector3.Angle(vec, owner.reflectWallNormal[i+1]);
+                    float angle = Vector3.Angle(vec, owner.reflectWallContact[i]);
+                    float angle2 = Vector3.Angle(vec, owner.reflectWallContact[i+1]);
 
                     if (angle < angle2)
                     {
-                        Vector3 temp = owner.reflectWallNormal[i];
-                        owner.reflectWallNormal[i] = owner.reflectWallNormal[i+1];
-                        owner.reflectWallNormal[i + 1] = temp;
+                        Vector3 temp = owner.reflectWallContact[i];
+                        owner.reflectWallContact[i] = owner.reflectWallContact[i+1];
+                        owner.reflectWallContact[i + 1] = temp;
 
 
                     }
                 }*/
-                for (int i = 0; i < owner.reflectWallNormal.Count; i++)
+                for (int i = 0; i < owner.reflectWallContact.Count; i++)
                 {
 
-                    vec = Vector3.Reflect(vec, owner.reflectWallNormal[i]);
+                    vec = Vector3.Reflect(vec, owner.reflectWallContact[i].normal);
 
                     //owner.reflectWall = null;
-                    owner.reflectWallNormal.Remove(owner.reflectWallNormal[i]);
+                    owner.reflectWallContact.RemoveAt(i);
+                    owner.reflectWallObj.RemoveAt(i);
                     boundCount--;
                     if(boundCount == 0)
                     {

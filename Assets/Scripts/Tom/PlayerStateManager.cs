@@ -10,7 +10,6 @@ public partial class PlayerStateManager : MonoBehaviour
     private PlayerStateBase moveState = new PlayerMoveState();
     private PlayerStateBase reflectionState = new PlayerReflectionState();
     public List<GameObject> reflectWallObj = new List<GameObject>();
-    public List<Vector3> reflectWallNormal = new List<Vector3>();
     public List<ContactPoint> reflectWallContact = new List<ContactPoint>();
     public float reflectSpeed = 10.0f;
 
@@ -30,7 +29,7 @@ public partial class PlayerStateManager : MonoBehaviour
     void Update()
     {
         currentState.OnUpdata(this);
-        print("反射面"+reflectWallNormal.Count);
+        //print("反射面"+reflectWallNormal.Count);
         for(int i=0;i<reflectWallContact.Count;i++)
         {
             print("壁"+i +" :"+reflectWallContact[i]);
@@ -63,7 +62,7 @@ public partial class PlayerStateManager : MonoBehaviour
 
         // 接触点の情報をリストに追加
         reflectWallContact.Add(contact);
-        reflectWallNormal.Add(contact.normal);
+        //reflectWallNormal.Add(contact.normal);
     }
 
     /// <summary>
@@ -98,24 +97,14 @@ public partial class PlayerStateManager : MonoBehaviour
     }*/
     private void OnCollisionExit(Collision collision)
     {
-        // 接触したオブジェクトをリストから削除
-        reflectWallObj.Remove(collision.gameObject);
 
-        // 接触点の最初の要素を取得
-        ContactPoint[] contacts = new ContactPoint[collision.contactCount];
-        collision.GetContacts(contacts);
-
-        // 最初の接触点のみ処理
-        ContactPoint contact = contacts[0];
-
-        // 接触点がリストに含まれているか確認し、含まれていれば削除
-        for (int i = 0; i < reflectWallContact.Count; i++)
+        for(int i=0;i<reflectWallObj.Count;i++)
         {
-            if (reflectWallContact[i].point == contact.point && reflectWallContact[i].normal == contact.normal)
+            if (reflectWallObj[i] == collision.gameObject)
             {
+                print("一致");
+                reflectWallObj.RemoveAt(i);
                 reflectWallContact.RemoveAt(i);
-                reflectWallNormal.RemoveAt(i);
-                break;  // 一致する項目が見つかったらループを抜ける
             }
         }
     }
